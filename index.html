@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Career Advisor — Find Your Path</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f7f4;
+  --surface: #ffffff;
+  --surface2: #f3f2ef;
+  --surface3: #eceae5;
+  --border: #e2e0da;
+  --border2: #d0cec8;
+  --ink: #1a1916;
+  --ink2: #6b6860;
+  --ink3: #a8a69f;
+  --accent: #1a1916;
+  --accent-warm: #c8622a;
+  --accent-warm-light: #fdf1ea;
+  --accent-green: #2d6a4f;
+  --accent-green-light: #eef6f1;
+  --accent-blue: #1d4ed8;
+  --accent-blue-light: #eff3ff;
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 18px;
+  --shadow-sm: 0 1px 3px rgba(26,25,22,0.06), 0 1px 2px rgba(26,25,22,0.04);
+  --shadow: 0 4px 16px rgba(26,25,22,0.08), 0 1px 4px rgba(26,25,22,0.04);
+  --shadow-lg: 0 12px 40px rgba(26,25,22,0.12), 0 4px 12px rgba(26,25,22,0.06);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'Geist', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── LAYOUT ── */
+.page-wrap {
+  display: grid;
+  grid-template-columns: 1fr min(680px, 100%) 1fr;
+  min-height: 100vh;
+}
+.page-wrap > * { grid-column: 2; }
+
+/* ── TOP BAR ── */
+.topbar {
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: rgba(248,247,244,0.92);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  grid-column: 1 / -1;
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-dot {
+  width: 28px;
+  height: 28px;
+  background: var(--ink);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.brand-dot svg { width: 14px; height: 14px; }
+.brand-name {
+  font-family: 'Geist', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.topbar-tag {
+  font-size: 12px;
+  color: var(--ink2);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-weight: 500;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 64px 24px 48px;
+  text-align: center;
+  animation: rise 0.7s cubic-bezier(0.16,1,0.3,1) both;
+}
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent-warm);
+  background: var(--accent-warm-light);
+  border: 1px solid rgba(200,98,42,0.18);
+  padding: 5px 14px;
+  border-radius: 99px;
+  margin-bottom: 24px;
+  letter-spacing: 0.02em;
+}
+.hero-eyebrow span { opacity: 0.5; }
+.hero h1 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(36px, 6vw, 54px);
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent-warm);
+}
+.hero p {
+  font-size: 15px;
+  color: var(--ink2);
+  max-width: 420px;
+  margin: 0 auto;
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+/* ── FORM CONTAINER ── */
+.form-container {
+  padding: 0 24px 80px;
+}
+
+/* ── CLASS SELECTOR ── */
+.class-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 32px;
+  animation: rise 0.7s 0.1s cubic-bezier(0.16,1,0.3,1) both;
+}
+.class-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+.class-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 60%, rgba(200,98,42,0.04));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.class-card:hover { border-color: var(--border2); box-shadow: var(--shadow); transform: translateY(-1px); }
+.class-card.active {
+  border-color: var(--ink);
+  box-shadow: var(--shadow);
+}
+.class-card.active::before { opacity: 1; }
+.class-grade {
+  font-family: 'Instrument Serif', serif;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--ink3);
+  margin-bottom: 6px;
+  transition: color 0.2s;
+}
+.class-card.active .class-grade { color: var(--ink); }
+.class-label { font-size: 13px; font-weight: 500; color: var(--ink2); transition: color 0.2s; }
+.class-card.active .class-label { color: var(--ink); }
+.class-sublabel { font-size: 11px; color: var(--ink3); margin-top: 3px; }
+.active-check {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 20px;
+  height: 20px;
+  background: var(--ink);
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.class-card.active .active-check { display: flex; }
+.active-check svg { width: 10px; height: 10px; }
+
+/* ── PROGRESS ── */
+.progress-wrap {
+  margin-bottom: 32px;
+  animation: rise 0.7s 0.15s cubic-bezier(0.16,1,0.3,1) both;
+}
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.progress-text { font-size: 12px; font-weight: 500; color: var(--ink2); }
+.progress-pct { font-size: 12px; font-weight: 600; color: var(--ink); font-family: 'Geist Mono', monospace; }
+.progress-track {
+  height: 2px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--ink);
+  border-radius: 99px;
+  transition: width 0.5s cubic-bezier(0.16,1,0.3,1);
+  width: 0%;
+}
+
+/* ── FORM SECTIONS ── */
+.form-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  animation: rise 0.6s cubic-bezier(0.16,1,0.3,1) both;
+  transition: box-shadow 0.2s;
+}
+.form-section:hover { box-shadow: var(--shadow); }
+.section-head {
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+.section-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+.section-meta { flex: 1; }
+.section-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.section-desc { font-size: 12px; color: var(--ink3); margin-top: 2px; }
+.section-num {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  color: var(--ink3);
+  font-weight: 500;
+}
+.section-body { padding: 22px; }
+
+/* ── FIELDS ── */
+.field { margin-bottom: 18px; }
+.field:last-child { margin-bottom: 0; }
+.field-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 7px;
+}
+.field-label label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.field-label .req {
+  font-size: 11px;
+  color: var(--accent-warm);
+  background: var(--accent-warm-light);
+  padding: 1px 7px;
+  border-radius: 99px;
+  font-weight: 500;
+}
+.field-hint { font-size: 11px; color: var(--ink3); margin-bottom: 7px; line-height: 1.4; }
+
+input[type="text"],
+select,
+textarea {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-family: 'Geist', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 11px 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input[type="text"]::placeholder,
+textarea::placeholder { color: var(--ink3); font-weight: 400; }
+input[type="text"]:hover,
+select:hover,
+textarea:hover { border-color: var(--border2); }
+input[type="text"]:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--ink);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgba(26,25,22,0.07);
+}
+textarea { resize: vertical; min-height: 88px; line-height: 1.6; }
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a8a69f' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+select option { background: var(--surface); }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media(max-width: 500px) { .field-row { grid-template-columns: 1fr; } }
+
+/* ── CHIPS ── */
+.chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip {
+  padding: 6px 13px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--ink2);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+  line-height: 1;
+}
+.chip:hover { border-color: var(--border2); color: var(--ink); background: var(--surface3); }
+.chip.on {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+
+/* ── DIVIDER ── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 18px 0;
+}
+
+/* ── CONDITIONAL ── */
+.twelfth-only { display: none; }
+.twelfth-only.show { display: block; }
+.twelfth-field-row { display: none; }
+.twelfth-field-row.show { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media(max-width:500px){ .twelfth-field-row.show { grid-template-columns: 1fr; } }
+
+/* ── SUBMIT ── */
+.submit-wrap {
+  margin-top: 24px;
+  animation: rise 0.6s 0.4s cubic-bezier(0.16,1,0.3,1) both;
+}
+.submit-btn {
+  width: 100%;
+  padding: 16px 24px;
+  border-radius: var(--radius);
+  border: none;
+  background: var(--ink);
+  color: #fff;
+  font-family: 'Geist', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.submit-btn:hover { background: #2d2c28; transform: translateY(-1px); box-shadow: var(--shadow); }
+.submit-btn:active { transform: translateY(0); }
+.submit-btn svg { width: 16px; height: 16px; transition: transform 0.2s; }
+.submit-btn:hover svg { transform: translateX(3px); }
+
+/* ── RESULT PANEL ── */
+.result-panel {
+  display: none;
+  margin-top: 32px;
+  animation: rise 0.6s cubic-bezier(0.16,1,0.3,1) both;
+}
+.result-panel.show { display: block; }
+.result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.result-top {
+  padding: 18px 22px;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.result-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: blink 1.6s ease infinite;
+}
+.result-status-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+.result-badge {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.1);
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-family: 'Geist Mono', monospace;
+}
+.prompt-box {
+  padding: 22px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  color: var(--ink2);
+  line-height: 1.9;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 380px;
+  overflow-y: auto;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.prompt-box::-webkit-scrollbar { width: 4px; }
+.prompt-box::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+.result-actions {
+  padding: 16px 22px;
+  display: flex;
+  gap: 10px;
+}
+.action-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-family: 'Geist', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  letter-spacing: -0.01em;
+}
+.action-btn.primary {
+  background: var(--ink);
+  color: #fff;
+}
+.action-btn.primary:hover { background: #2d2c28; }
+.action-btn.primary.copied {
+  background: var(--accent-green);
+  color: #fff;
+}
+.action-btn.ghost {
+  background: var(--surface2);
+  color: var(--ink2);
+  border: 1px solid var(--border);
+}
+.action-btn.ghost:hover { background: var(--surface3); color: var(--ink); border-color: var(--border2); }
+
+/* ── STEPS ── */
+.steps-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  margin-top: 12px;
+  box-shadow: var(--shadow-sm);
+}
+.steps-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.step-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.step-row:last-child { margin-bottom: 0; }
+.step-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: 'Geist Mono', monospace;
+}
+.step-text { font-size: 13px; color: var(--ink2); line-height: 1.5; padding-top: 3px; }
+.step-text strong { color: var(--ink); font-weight: 600; }
+
+/* ── ANIMATIONS ── */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="page-wrap">
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="brand-dot">
+      <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 1.5L11.5 4.5V9.5L7 12.5L2.5 9.5V4.5L7 1.5Z" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
+        <circle cx="7" cy="7" r="1.5" fill="white"/>
+      </svg>
+    </div>
+    <span class="brand-name">CareerAI</span>
+  </div>
+  <span class="topbar-tag">Free · No signup needed</span>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">For Class 10 &amp; 12 Students <span>·</span> Results Awaited</div>
+  <h1>Discover your<br><em>perfect career path</em></h1>
+  <p>Fill out the form below. A personalised AI prompt will be generated — paste it into Claude or ChatGPT for your full career roadmap.</p>
+</div>
+
+<!-- FORM AREA -->
+<div class="form-container">
+
+  <!-- CLASS SELECTOR -->
+  <div class="class-selector">
+    <div class="class-card active" id="card10" onclick="setClass('10')">
+      <div class="class-grade">10th</div>
+      <div class="class-label">Stream Selection</div>
+      <div class="class-sublabel">Science / Commerce / Arts</div>
+      <div class="active-check">
+        <svg viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+    <div class="class-card" id="card12" onclick="setClass('12')">
+      <div class="class-grade">12th</div>
+      <div class="class-label">Degree Selection</div>
+      <div class="class-sublabel">Engineering / BBA / BA / and more</div>
+      <div class="active-check">
+        <svg viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-labels">
+      <span class="progress-text">Form completion</span>
+      <span class="progress-pct" id="pct-label">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog"></div></div>
+  </div>
+
+  <!-- FORM -->
+  <form id="theForm" onsubmit="generate(event)" oninput="updateProg()">
+
+    <!-- S1 -->
+    <div class="form-section" style="animation-delay:0.1s">
+      <div class="section-head">
+        <div class="section-icon-wrap">📚</div>
+        <div class="section-meta">
+          <div class="section-name">Academic Background</div>
+          <div class="section-desc">Your exam performance and subjects</div>
+        </div>
+        <div class="section-num">01</div>
+      </div>
+      <div class="section-body">
+
+        <div class="field">
+          <div class="field-label"><label>Estimated result percentage</label><span class="req">Required</span></div>
+          <select id="marks" required>
+            <option value="">Select your estimated range</option>
+            <option>90% and above</option>
+            <option>80% – 89%</option>
+            <option>70% – 79%</option>
+            <option>60% – 69%</option>
+            <option>50% – 59%</option>
+            <option>Below 50%</option>
+          </select>
+        </div>
+
+        <div class="twelfth-only show-12" id="stream12wrap">
+          <div class="field">
+            <div class="field-label"><label>Your 12th stream</label><span class="req">Required</span></div>
+            <select id="stream12">
+              <option value="">Select your stream</option>
+              <option>Science – PCM (Physics, Chemistry, Maths)</option>
+              <option>Science – PCB (Physics, Chemistry, Biology)</option>
+              <option>Commerce</option>
+              <option>Arts / Humanities</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <div class="field-label"><label>Best subjects</label><span class="req">Required</span></div>
+            <input type="text" id="best_sub" placeholder="e.g. Maths, Science, English" required>
+          </div>
+          <div class="field">
+            <div class="field-label"><label>Difficult subjects</label></div>
+            <input type="text" id="weak_sub" placeholder="e.g. Hindi, Social Science">
+          </div>
+        </div>
+
+        <div class="twelfth-only show-12">
+          <div class="field">
+            <div class="field-label"><label>Entrance exam appeared for</label></div>
+            <select id="entrance">
+              <option value="">Select if applicable</option>
+              <option>JEE Main / Advanced</option>
+              <option>NEET</option>
+              <option>CUET</option>
+              <option>CLAT</option>
+              <option>NDA</option>
+              <option>Did not appear for any</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- S2 -->
+    <div class="form-section" style="animation-delay:0.15s">
+      <div class="section-head">
+        <div class="section-icon-wrap">✦</div>
+        <div class="section-meta">
+          <div class="section-name">Interests &amp; Hobbies</div>
+          <div class="section-desc">What genuinely excites you every day</div>
+        </div>
+        <div class="section-num">02</div>
+      </div>
+      <div class="section-body">
+
+        <div class="field">
+          <div class="field-label"><label>Select everything you enjoy</label><span class="req">Required</span></div>
+          <div class="field-hint">Pick as many as feel true — be honest, not aspirational</div>
+          <div class="chips" id="interest_chips">
+            <div class="chip" onclick="tog(this)">Technology &amp; Coding</div>
+            <div class="chip" onclick="tog(this)">Drawing &amp; Art</div>
+            <div class="chip" onclick="tog(this)">Business &amp; Startups</div>
+            <div class="chip" onclick="tog(this)">Music &amp; Audio</div>
+            <div class="chip" onclick="tog(this)">Writing &amp; Storytelling</div>
+            <div class="chip" onclick="tog(this)">Sports &amp; Fitness</div>
+            <div class="chip" onclick="tog(this)">Helping &amp; Caring for Others</div>
+            <div class="chip" onclick="tog(this)">Science &amp; Research</div>
+            <div class="chip" onclick="tog(this)">Gaming</div>
+            <div class="chip" onclick="tog(this)">Cooking &amp; Food</div>
+            <div class="chip" onclick="tog(this)">Teaching &amp; Explaining</div>
+            <div class="chip" onclick="tog(this)">Design &amp; Aesthetics</div>
+            <div class="chip" onclick="tog(this)">Social Media &amp; Content</div>
+            <div class="chip" onclick="tog(this)">Numbers &amp; Finance</div>
+            <div class="chip" onclick="tog(this)">Nature &amp; Environment</div>
+            <div class="chip" onclick="tog(this)">Public Speaking</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><label>If money was never a problem, what would you love to do?</label><span class="req">Required</span></div>
+          <div class="field-hint">Most important answer in this form — be completely honest</div>
+          <textarea id="dream_do" placeholder="Write what genuinely excites you, not what sounds impressive..." required></textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- S3 -->
+    <div class="form-section" style="animation-delay:0.2s">
+      <div class="section-head">
+        <div class="section-icon-wrap">◈</div>
+        <div class="section-meta">
+          <div class="section-name">Personality &amp; Working Style</div>
+          <div class="section-desc">How you think, work, and make decisions</div>
+        </div>
+        <div class="section-num">03</div>
+      </div>
+      <div class="section-body">
+
+        <div class="field">
+          <div class="field-label"><label>I would describe myself as</label><span class="req">Required</span></div>
+          <div class="chips" id="personality_chips">
+            <div class="chip" onclick="tog(this)">Creative</div>
+            <div class="chip" onclick="tog(this)">Logical &amp; Analytical</div>
+            <div class="chip" onclick="tog(this)">Social &amp; Empathetic</div>
+            <div class="chip" onclick="tog(this)">Practical &amp; Hands-on</div>
+            <div class="chip" onclick="tog(this)">Natural Leader</div>
+            <div class="chip" onclick="tog(this)">Quiet &amp; Focused</div>
+            <div class="chip" onclick="tog(this)">Curious &amp; Research-driven</div>
+            <div class="chip" onclick="tog(this)">Competitive</div>
+            <div class="chip" onclick="tog(this)">Empathetic</div>
+            <div class="chip" onclick="tog(this)">Detail-oriented</div>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <div class="field-label"><label>I prefer working</label></div>
+            <select id="work_style">
+              <option value="">Select preference</option>
+              <option>Alone — I focus better solo</option>
+              <option>In a team — I love collaboration</option>
+              <option>Both equally</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-label"><label>Under pressure, I tend to</label></div>
+            <select id="pressure_resp">
+              <option value="">Select behaviour</option>
+              <option>Stay focused and work harder</option>
+              <option>Get anxious but manage it</option>
+              <option>Procrastinate and delay</option>
+              <option>Seek help from others</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><label>My biggest personal strength</label></div>
+          <input type="text" id="strength" placeholder="e.g. Curiosity, creativity, communication, discipline, resilience">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- S4 -->
+    <div class="form-section" style="animation-delay:0.25s">
+      <div class="section-head">
+        <div class="section-icon-wrap">◎</div>
+        <div class="section-meta">
+          <div class="section-name">Family &amp; Financial Background</div>
+          <div class="section-desc">Helps suggest realistic, achievable options</div>
+        </div>
+        <div class="section-num">04</div>
+      </div>
+      <div class="section-body">
+
+        <div class="field-row">
+          <div class="field">
+            <div class="field-label"><label>Family monthly income</label><span class="req">Required</span></div>
+            <select id="income" required>
+              <option value="">Select range</option>
+              <option>₹20,000 – ₹40,000</option>
+              <option>₹40,000 – ₹80,000</option>
+              <option>₹80,000 – ₹1,50,000</option>
+              <option>₹1,50,000+</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-label"><label>Education budget per year</label><span class="req">Required</span></div>
+            <select id="budget" required>
+              <option value="">Select budget</option>
+              <option>Up to ₹50,000</option>
+              <option>₹1 – ₹2 lakh</option>
+              <option>₹3 – ₹5 lakh</option>
+              <option>₹5 lakh+</option>
+              <option>Can take education loan</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><label>Family expectations or pressure</label></div>
+          <input type="text" id="fam_pressure" placeholder="e.g. Parents want engineer / Doctor / No pressure / Govt job preferred">
+        </div>
+
+        <div class="field">
+          <div class="field-label"><label>Need to start earning within</label></div>
+          <select id="earn_timeline">
+            <option value="">Select timeline</option>
+            <option>2–3 years</option>
+            <option>4–5 years</option>
+            <option>5+ years, I'm flexible</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- S5 -->
+    <div class="form-section" style="animation-delay:0.3s">
+      <div class="section-head">
+        <div class="section-icon-wrap">◉</div>
+        <div class="section-meta">
+          <div class="section-name">Location &amp; Access</div>
+          <div class="section-desc">Where you are and how far you can go</div>
+        </div>
+        <div class="section-num">05</div>
+      </div>
+      <div class="section-body">
+
+        <div class="field-row">
+          <div class="field">
+            <div class="field-label"><label>Your city &amp; state</label><span class="req">Required</span></div>
+            <input type="text" id="city" placeholder="e.g. Patna, Bihar" required>
+          </div>
+          <div class="field">
+            <div class="field-label"><label>Type of area</label></div>
+            <select id="area_type">
+              <option value="">Select type</option>
+              <option>Metro city</option>
+              <option>Tier-2 city</option>
+              <option>Small town</option>
+              <option>Rural area</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <div class="field-label"><label>Can you relocate for studies?</label></div>
+            <select id="relocate">
+              <option value="">Select option</option>
+              <option>Yes — anywhere in India</option>
+              <option>Only certain cities</option>
+              <option>No — must stay in my city</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-label"><label>Studying abroad?</label></div>
+            <select id="abroad">
+              <option value="">Select option</option>
+              <option>Yes, actively considering</option>
+              <option>Maybe for Masters later</option>
+              <option>No — not financially possible</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- S6 -->
+    <div class="form-section" style="animation-delay:0.35s">
+      <div class="section-head">
+        <div class="section-icon-wrap">◐</div>
+        <div class="section-meta">
+          <div class="section-name">Dreams &amp; Fears</div>
+          <div class="section-desc">Your honest ambitions and real worries</div>
+        </div>
+        <div class="section-num">06</div>
+      </div>
+      <div class="section-body">
+
+        <div class="field">
+          <div class="field-label"><label>Your dream career (if you have one)</label></div>
+          <input type="text" id="dream_career" placeholder="Write honestly — 'Confused / No idea' is perfectly fine and helpful">
+        </div>
+
+        <div class="field">
+          <div class="field-label"><label>What scares you most about your future?</label></div>
+          <div class="chips" id="fear_chips">
+            <div class="chip" onclick="tog(this)">Choosing the wrong stream or degree</div>
+            <div class="chip" onclick="tog(this)">No job after studying</div>
+            <div class="chip" onclick="tog(this)">AI replacing my career</div>
+            <div class="chip" onclick="tog(this)">Disappointing my parents</div>
+            <div class="chip" onclick="tog(this)">Financial insecurity</div>
+            <div class="chip" onclick="tog(this)">Getting stuck in wrong career</div>
+            <div class="chip" onclick="tog(this)">Low marks limiting my options</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><label>Interest in entrepreneurship or freelancing?</label></div>
+          <select id="entrepreneur">
+            <option value="">Select interest level</option>
+            <option>Very interested — it's my goal</option>
+            <option>Somewhat interested</option>
+            <option>No — I want a stable job</option>
+            <option>Not sure yet</option>
+          </select>
+        </div>
+
+        <div class="twelfth-only show-12">
+          <div class="divider"></div>
+          <div class="field">
+            <div class="field-label"><label>A degree you're already considering but unsure about</label></div>
+            <div class="field-hint">Write it here — I'll give you an honest, detailed assessment</div>
+            <input type="text" id="considering" placeholder="e.g. BBA, Computer Science, B.Com, Psychology, B.Arch">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-wrap">
+      <button type="submit" class="submit-btn">
+        Generate My AI Prompt
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+  </form>
+
+  <!-- RESULT -->
+  <div class="result-panel" id="result">
+    <div class="result-card">
+      <div class="result-top">
+        <div class="result-status">
+          <div class="pulse-dot"></div>
+          <span class="result-status-text">Your personalised prompt is ready</span>
+        </div>
+        <span class="result-badge" id="class-badge">CLASS 10</span>
+      </div>
+      <div class="prompt-box" id="prompt-out"></div>
+      <div class="result-actions">
+        <button class="action-btn primary" id="copy-btn" onclick="doCopy()">Copy Prompt</button>
+        <button class="action-btn ghost" onclick="doReset()">Start Over</button>
+      </div>
+    </div>
+
+    <div class="steps-card">
+      <div class="steps-title">How to use this prompt</div>
+      <div class="step-row">
+        <div class="step-circle">1</div>
+        <div class="step-text">Click <strong>Copy Prompt</strong> above</div>
+      </div>
+      <div class="step-row">
+        <div class="step-circle">2</div>
+        <div class="step-text">Open <strong>Claude.ai</strong> or <strong>ChatGPT</strong> in a new tab</div>
+      </div>
+      <div class="step-row">
+        <div class="step-circle">3</div>
+        <div class="step-text">Paste the prompt and press <strong>Enter</strong></div>
+      </div>
+      <div class="step-row">
+        <div class="step-circle">4</div>
+        <div class="step-text">Read your <strong>full personalised career roadmap</strong> — tailored only to you</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+let cls = '10';
+
+function setClass(c) {
+  cls = c;
+  document.getElementById('card10').classList.toggle('active', c === '10');
+  document.getElementById('card12').classList.toggle('active', c === '12');
+  document.querySelectorAll('.twelfth-only').forEach(el => el.classList.toggle('show', c === '12'));
+  document.getElementById('class-badge').textContent = 'CLASS ' + c;
+  updateProg();
+}
+
+function tog(el) { el.classList.toggle('on'); updateProg(); }
+
+function chips(id) {
+  return Array.from(document.querySelectorAll('#' + id + ' .chip.on')).map(c => c.textContent.trim()).join(', ');
+}
+
+function v(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
+function updateProg() {
+  const req = ['marks', 'best_sub', 'income', 'budget', 'city'];
+  let done = req.filter(id => v(id)).length;
+  if (document.getElementById('dream_do').value.trim()) done++;
+  if (document.querySelectorAll('#interest_chips .chip.on').length) done++;
+  const total = req.length + 2;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('pct-label').textContent = pct + '%';
+}
+
+function generate(e) {
+  e.preventDefault();
+  const est = v('marks'), bestSub = v('best_sub'), weakSub = v('weak_sub') || 'Not specified';
+  const interests = chips('interest_chips') || 'Not specified';
+  const dreamDo = v('dream_do');
+  const personality = chips('personality_chips') || 'Not specified';
+  const workStyle = v('work_style') || 'Not specified';
+  const pressure = v('pressure_resp') || 'Not specified';
+  const strength = v('strength') || 'Not specified';
+  const income = v('income'), budget = v('budget');
+  const famPressure = v('fam_pressure') || 'No specific pressure mentioned';
+  const earnTimeline = v('earn_timeline') || 'Not specified';
+  const city = v('city');
+  const areaType = v('area_type') || 'Not specified';
+  const relocate = v('relocate') || 'Not specified';
+  const abroad = v('abroad') || 'Not specified';
+  const dreamCareer = v('dream_career') || 'Confused / Not sure yet';
+  const fears = chips('fear_chips') || 'Not specified';
+  const entrepreneur = v('entrepreneur') || 'Not specified';
+
+  let prompt = '';
+
+  if (cls === '10') {
+    prompt = `You are an expert career counsellor, psychologist, and future-of-work specialist with deep knowledge of the Indian education system, job market trends, and the impact of Artificial Intelligence on careers from 2025 to 2040.
+
+I have just appeared in my Class 10 board exams. My results are not yet out. I need your honest, detailed, and personalised guidance on which stream to choose — Science, Commerce, or Arts.
+
+Please read every detail carefully before responding.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 1 — ACADEMIC BACKGROUND
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Class: 10th Pass (Result Not Yet Out)
+Estimated Percentage: ${est}
+Strongest Subjects: ${bestSub}
+Most Difficult Subjects: ${weakSub}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 2 — INTERESTS & HOBBIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Things I Genuinely Enjoy: ${interests}
+If Money Was Never a Problem, I Would Love To: ${dreamDo}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 3 — PERSONALITY & WORKING STYLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I Describe Myself As: ${personality}
+Work Preference: ${workStyle}
+Under Pressure, I: ${pressure}
+My Biggest Strength: ${strength}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 4 — FAMILY & FINANCIAL BACKGROUND
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Family Monthly Income: ${income}
+Education Budget Per Year: ${budget}
+Family Expectations: ${famPressure}
+Need to Start Earning Within: ${earnTimeline}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 5 — LOCATION & ACCESS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+City & State: ${city}
+Area Type: ${areaType}
+Can Relocate for Studies: ${relocate}
+Studying Abroad: ${abroad}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 6 — DREAMS & FEARS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Dream Career: ${dreamCareer}
+Biggest Fears About the Future: ${fears}
+Interest in Entrepreneurship: ${entrepreneur}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PLEASE NOW GIVE ME ALL OF THE FOLLOWING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. BEST STREAM FOR ME
+Tell me clearly which stream — Science, Commerce, or Arts — is the single best fit for my profile and exactly why. Be specific to my situation, not generic.
+
+2. HONEST BREAKDOWN OF ALL 3 STREAMS
+For each stream: what careers are realistically available, what kind of student genuinely thrives in it, the real challenges I would face, and whether it fits my personality — yes or no with clear reasoning.
+
+3. AI ERA CAREER SAFETY (2025–2040)
+Which careers in each stream will be safe and growing by 2035? Which careers are at serious risk from AI? What skills should I build right now to stay relevant regardless of which stream I choose?
+
+4. MY TOP 3 PERSONALISED CAREER RECOMMENDATIONS
+Three specific careers that match my interests, personality, and budget. For each: exact career name, which stream leads to it, average starting salary in India, 10-year growth potential, and whether AI is a threat or advantage in that field.
+
+5. THE HIDDEN GEM CAREER
+One career that very few students know about right now, has high demand coming in the next 10 years, matches my personality, and I have very likely never considered. Full details — how to enter, what it involves day to day, and earning potential at different stages.
+
+6. IF MY RESULT COMES LOWER THAN EXPECTED
+What strong options remain available? Which paths should I absolutely not give up on? What alternative routes lead to good careers even with average marks?
+
+7. WHAT TO DO RIGHT NOW — BEFORE RESULTS ARRIVE
+One high-value skill I can start building today. A free certification worth completing in the next few weeks. How to use this waiting period to be significantly ahead when results arrive.
+
+8. MY PERSONAL CAREER ROADMAP
+A step-by-step roadmap for my most recommended career option: what to do immediately after results, Year 1–3 key milestones, Year 3–5 professional entry, and realistic income benchmarks at each stage in India.`;
+
+  } else {
+    const stream12 = v('stream12') || 'Not specified';
+    const entrance = v('entrance') || 'Did not appear';
+    const considering = v('considering') || 'Not mentioned';
+
+    prompt = `You are an expert career counsellor, higher education specialist, and future-of-work analyst with deep knowledge of Indian universities, degree programmes, job market trends, and the impact of Artificial Intelligence on careers from 2025 to 2040.
+
+I have just appeared in my Class 12 board exams. My results are not yet out. I need detailed, honest, and fully personalised guidance on which degree or field to choose next.
+
+Please read every detail carefully before responding.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 1 — ACADEMIC BACKGROUND
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Class: 12th Pass (Result Not Yet Out)
+Stream Studied: ${stream12}
+Estimated Percentage: ${est}
+Strongest Subjects: ${bestSub}
+Most Difficult Subjects: ${weakSub}
+Entrance Exam Appeared For: ${entrance}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 2 — INTERESTS & NATURAL SKILLS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Things I Genuinely Enjoy: ${interests}
+If Money Was Never a Problem, I Would Love To: ${dreamDo}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 3 — PERSONALITY & WORKING STYLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I Describe Myself As: ${personality}
+Work Preference: ${workStyle}
+Under Pressure, I: ${pressure}
+My Biggest Strength: ${strength}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 4 — FAMILY & FINANCIAL BACKGROUND
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Family Monthly Income: ${income}
+Education Budget Per Year: ${budget}
+Family Expectations: ${famPressure}
+Need to Start Earning Within: ${earnTimeline}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 5 — LOCATION & ACCESS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+City & State: ${city}
+Area Type: ${areaType}
+Can Relocate for Studies: ${relocate}
+Studying Abroad: ${abroad}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 6 — AMBITIONS, DREAMS & FEARS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Dream Career: ${dreamCareer}
+Biggest Fears About the Future: ${fears}
+Interest in Entrepreneurship: ${entrepreneur}
+Degree / Career Already Considering: ${considering}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PLEASE NOW GIVE ME ALL OF THE FOLLOWING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. BEST DEGREE OR FIELD FOR ME
+Tell me clearly and specifically which degree or field is the single best fit for my profile — and exactly why — based on my stream, estimated marks, personality, interests, budget, and city. Do not be generic. Make it personal.
+
+2. MY TOP 3 CAREER RECOMMENDATIONS WITH FULL DETAILS
+For each recommendation: exact degree name and duration, best colleges and entrance exams in India, average starting salary and salary at 5 years experience, what the actual day-to-day work looks like, what kind of person genuinely thrives in this career, and whether AI is a threat or a clear advantage in this field by 2035.
+
+3. AI ERA CAREER SAFETY (2025–2040)
+Which degrees and fields will be in strong demand in an AI-driven world? Which popular degrees are becoming risky or redundant — be completely honest. What skills should I build now to stay relevant regardless of my chosen field? How can I use AI as an advantage rather than fear it?
+
+4. HONEST ASSESSMENT OF MY CONSIDERED OPTION
+I mentioned a degree or career I am already thinking about. Give me a brutally honest assessment: is it a good fit for my profile — yes or no with clear reasoning, real challenges and risks, what would make it the right choice, and what would make it the wrong one.
+
+5. THE HIDDEN GEM CAREER
+One career path that very few students from my background are currently considering, has rapidly growing demand in India and globally in the next 10 years, aligns well with my personality, and I have very likely never seriously thought about. Full details — how to enter, qualifications needed, and realistic earning potential at 3, 5, and 10 years.
+
+6. BACKUP PLAN IF RESULTS ARE LOWER THAN EXPECTED
+Which strong options remain available if my actual percentage or entrance rank comes lower than estimated? Which paths should I absolutely not give up on? What alternative routes lead to good careers without depending solely on board exam marks?
+
+7. WHAT TO DO RIGHT NOW — BEFORE RESULTS ARRIVE
+One high-value skill I can start building today. A free or affordable certification worth completing now. How to use this waiting period to be significantly ahead of my peers when admissions open.
+
+8. MY PERSONAL CAREER ROADMAP
+A clear and realistic step-by-step roadmap for my most recommended career: immediate next steps after results, Year 1–3 academic and skill milestones, Year 3–5 professional entry and early growth, Year 5–10 role and income, and specific income benchmarks at each stage in India.`;
+  }
+
+  document.getElementById('prompt-out').textContent = prompt;
+  document.getElementById('result').classList.add('show');
+  setTimeout(() => {
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+function doCopy() {
+  const text = document.getElementById('prompt-out').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy Prompt'; btn.classList.remove('copied'); }, 2500);
+  });
+}
+
+function doReset() {
+  document.getElementById('theForm').reset();
+  document.querySelectorAll('.chip.on').forEach(c => c.classList.remove('on'));
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('prog').style.width = '0%';
+  document.getElementById('pct-label').textContent = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
